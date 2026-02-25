@@ -1,0 +1,42 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sweet_bites_bakery
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/sweetbites.sql:/docker-entrypoint-initdb.d/sweetbites.sql:ro
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: root
+      DB_NAME: sweet_bites_bakery
+      APP_URL: http://localhost:3000
+      API_URL: http://localhost:3000/backend
+    depends_on:
+      - db
+    volumes:
+      - ./backend/uploads:/var/www/html/backend/uploads
+    ports:
+      - "8080:80"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_GEMINI_API_KEY: ${VITE_GEMINI_API_KEY}
+        VITE_API_BASE_URL: /backend/api
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db_data:

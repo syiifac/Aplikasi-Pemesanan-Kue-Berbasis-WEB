@@ -1,0 +1,8 @@
+
+{
+  "name": "Sweet Bites Bakery Management System",
+  "description": "A comprehensive bakery management platform for customers, sellers, and administrators, featuring AI-powered cake recommendations and transaction management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
